@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "79c1b8ed-fc3a-4eb6-a0ad-5fdf253b533f",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "dbb1b2fc-34e8-479c-8751-16ae41c200fb",
+  "prevId": "79c1b8ed-fc3a-4eb6-a0ad-5fdf253b533f",
   "tables": {
     "answers": {
       "name": "answers",
@@ -27,6 +27,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
         }
       },
       "indexes": {},

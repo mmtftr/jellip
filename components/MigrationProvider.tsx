@@ -2,7 +2,8 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../drizzle/migrations";
 import { View, Text } from "react-native";
 import React from "react";
-import { db } from "./db";
+import { db } from "@/services/db";
+import SeedProvider from "./SeedProvider";
 
 export default function MigrationProvider({
   children,
@@ -22,5 +23,7 @@ export default function MigrationProvider({
       </View>
     );
   }
-  return children;
+
+  // Seed after migrations if needed
+  return <SeedProvider>{children}</SeedProvider>;
 }
