@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1713255870936,
+      "tag": "0000_safe_shadow_king",
+      "breakpoints": true
+    }
+  ]
+}
