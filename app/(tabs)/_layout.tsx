@@ -1,12 +1,11 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { Tabs } from "expo-router";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { Button, Theme } from "tamagui";
+import { Button } from "tamagui";
 import { Delete } from "@tamagui/lucide-icons";
 import { resetAndReseed } from "../../components/SeedProvider";
 
@@ -31,25 +30,34 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="question"
         options={{
           title: "Question",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="question-circle" color={color} />
           ),
-          headerRight: () => (
-            <Button
-              marginEnd="$2"
-              icon={Delete}
-              variant="outlined"
-              color="red"
-              theme="red_active"
-              size="$2"
-              onPress={resetAndReseed}
-            >
-              Reseed
-            </Button>
-          ),
+          headerRight: () =>
+            // check if development
+            __DEV__ && (
+              <Button
+                marginEnd="$2"
+                icon={Delete}
+                variant="outlined"
+                color="red"
+                theme="red_active"
+                size="$2"
+                onPress={resetAndReseed}
+              >
+                Reseed
+              </Button>
+            ),
         }}
       />
     </Tabs>

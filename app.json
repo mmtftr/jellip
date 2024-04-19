@@ -16,7 +16,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.mmtf.jlpt-practice"
     },
     "android": {
       "adaptiveIcon": {

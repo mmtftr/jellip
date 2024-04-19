@@ -9,9 +9,9 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
-import { useColorScheme } from "@/components/useColorScheme";
+import { useColorScheme } from "react-native";
 import MigrationProvider from "../components/MigrationProvider";
-import { TamaguiProvider } from "tamagui";
+import { TamaguiProvider, Theme } from "tamagui";
 import { ToastProvider, ToastViewport } from "@tamagui/toast";
 import { tamaguiConfig } from "@/constants/tamagui";
 
@@ -58,19 +58,20 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <TamaguiProvider config={tamaguiConfig} defaultTheme="light_blue">
-      <ToastProvider burntOptions={{ from: "top" }}>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
+    <TamaguiProvider
+      config={tamaguiConfig}
+      defaultTheme={colorScheme || "light"}
+    >
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <ToastProvider burntOptions={{ from: "top" }}>
           <ToastViewport />
           <MigrationProvider>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>
           </MigrationProvider>
-        </ThemeProvider>
-      </ToastProvider>
+        </ToastProvider>
+      </ThemeProvider>
     </TamaguiProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { Button, ThemeName } from "tamagui";
+import { Button, Theme, ThemeName } from "tamagui";
 
 export const AnswerButton = ({
   answerText,
@@ -21,18 +21,20 @@ export const AnswerButton = ({
     }
   }
   return (
-    <Button
-      animation={{ theme: "fast" }}
-      minWidth="40%"
-      pressStyle={{ scale: 0.95 }}
-      flex={1}
-      theme={theme}
-      size={"$5"}
-      noTextWrap={false}
-      textProps={{ adjustsFontSizeToFit: true }}
-      onPress={onPress}
-    >
-      {answerText}
-    </Button>
+    <Theme name="blue">
+      <Button
+        animation={{ theme: "fast" }}
+        minWidth="40%"
+        pressStyle={{ scale: 0.95 }}
+        flex={1}
+        theme={theme}
+        size={"$5"}
+        noTextWrap={false}
+        textProps={{ adjustsFontSizeToFit: true }}
+        onPress={onPress}
+      >
+        {answerText}
+      </Button>
+    </Theme>
   );
 };

@@ -12,7 +12,6 @@ import {
   QuestionWithAnswers,
   submitAnswer,
 } from "../../services/questions";
-import { answers, questions } from "../../db/schema";
 import { useToastController } from "@tamagui/toast";
 import * as zod from "zod";
 import { AnswerButton } from "../../components/AnswerButton";
