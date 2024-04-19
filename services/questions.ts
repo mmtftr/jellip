@@ -2,16 +2,22 @@ import { db } from "@/services/db";
 import { answers, questions } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
 
-const getRandomQuestion = async () => {
-  return (
+export type QuestionWithAnswers = typeof questions.$inferSelect & {
+  userAnswers: (typeof answers.$inferSelect)[];
+};
+const getRandomQuestion = async (): Promise<QuestionWithAnswers> => {
+  const question =
     (
       await db
         .select()
         .from(questions)
         .orderBy(sql`random()`)
         .limit(1)
-    )[0] || null
-  );
+    )[0] || null;
+
+  const answers = await getAnswers(question.id);
+
+  return { ...question, userAnswers: answers };
 };
 
 const getAnswers = async (questionId: number) => {

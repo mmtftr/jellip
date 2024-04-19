@@ -11,18 +11,10 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import MigrationProvider from "../components/MigrationProvider";
-import { TamaguiProvider, createTamagui } from "tamagui";
-import { config } from "@tamagui/config/v3";
+import { TamaguiProvider } from "tamagui";
 import { ToastProvider, ToastViewport } from "@tamagui/toast";
+import { tamaguiConfig } from "@/constants/tamagui";
 
-// you usually export this from a tamagui.config.ts file
-const tamaguiConfig = createTamagui(config);
-
-// make TypeScript type everything based on your config
-type Conf = typeof tamaguiConfig;
-declare module "@tamagui/core" {
-  interface TamaguiCustomConfig extends Conf {}
-}
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -30,7 +22,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
+  initialRouteName: "(tabs)/question",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -66,7 +58,7 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <TamaguiProvider config={tamaguiConfig}>
+    <TamaguiProvider config={tamaguiConfig} defaultTheme="light_blue">
       <ToastProvider burntOptions={{ from: "top" }}>
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}

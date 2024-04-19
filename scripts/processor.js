@@ -1,10 +1,4 @@
-async function main() {
-  const csv = await require("fs/promises").readFile(
-    "./data/mondai.csv",
-    "utf8",
-  );
-
-  const lines = csv.split("\n");
+function getQuestionsFromLines(lines) {
   let qId = null;
   const mondai = lines
     .map((line) => {
@@ -19,7 +13,13 @@ async function main() {
           correctAnswer: Number(sp[5]) - 1,
         };
       qId = Number(sp[0]);
-      return { type: "question", id: Number(sp[0]), questionText: sp[1] };
+      return {
+        id: Number(sp[0]),
+        type: "question",
+        category: "vocabulary",
+        level: "N1",
+        questionText: sp[1],
+      };
     })
     .filter(Boolean);
 
@@ -30,11 +30,39 @@ async function main() {
     q.correctAnswer = answer.correctAnswer;
     delete q["type"];
   }
-  console.log(questions);
+
+  return questions;
+}
+
+async function main() {
+  const csv = await require("fs/promises").readFile(
+    "./data/mondai.csv",
+    "utf8"
+  );
+  const csv2 = await require("fs/promises").readFile(
+    "./data/mondai2.csv",
+    "utf8"
+  );
+
+  const questions = getQuestionsFromLines(csv.split("\n"));
+  const questions2 = getQuestionsFromLines(csv2.split("\n"));
+
+  console.log(questions.length, questions2.length);
   await require("fs/promises").writeFile(
     "../constants/seed.json",
-    JSON.stringify({ questions }, 0, 2),
-    "utf8",
+    JSON.stringify(
+      {
+        questions: new Array()
+          .concat(questions, questions2)
+          .map((q, id) => ({ ...q, id })),
+      },
+      0,
+      2
+    ),
+    "utf8"
   );
 }
 main();
+setTimeout(() => {
+  process.exit(0);
+}, 1000);

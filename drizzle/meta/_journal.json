@@ -15,6 +15,13 @@
       "when": 1713275283868,
       "tag": "0001_lush_galactus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1713535837267,
+      "tag": "0002_ambitious_risque",
+      "breakpoints": true
     }
   ]
 }

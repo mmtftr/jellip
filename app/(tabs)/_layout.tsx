@@ -6,7 +6,7 @@ import { Pressable } from "react-native";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { Button } from "tamagui";
+import { Button, Theme } from "tamagui";
 import { Delete } from "@tamagui/lucide-icons";
 import { resetAndReseed } from "../../components/SeedProvider";
 
@@ -31,7 +31,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="question"
         options={{
           title: "Question",
           tabBarIcon: ({ color }) => (
@@ -42,8 +42,8 @@ export default function TabLayout() {
               marginEnd="$2"
               icon={Delete}
               variant="outlined"
-              color="$red9"
-              theme="red"
+              color="red"
+              theme="red_active"
               size="$2"
               onPress={resetAndReseed}
             >
