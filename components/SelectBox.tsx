@@ -24,10 +24,11 @@ export function SelectBox({
         <Select.Value placeholder={placeholder} />
       </Select.Trigger>
 
-      <Adapt when="sm" platform="touch">
+      <Adapt platform="touch">
         <Sheet
-          native
+          snapPoints={[85, 35]}
           modal
+          defaultPosition={1}
           dismissOnSnapToBottom
           animationConfig={{
             type: "spring",

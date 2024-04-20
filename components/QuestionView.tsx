@@ -8,7 +8,7 @@ import {
 } from "@/services/questions";
 import { AnswerButton } from "@/components/AnswerButton";
 import { QuestionContent } from "@/components/QuestionContent";
-import { BookOpen, Search } from "@tamagui/lucide-icons";
+import { ArrowRight, BookOpen, Search } from "@tamagui/lucide-icons";
 import * as WebBrowser from "expo-web-browser";
 
 export function QuestionView({
@@ -16,11 +16,13 @@ export function QuestionView({
   answer,
   handleAnswer,
   noMargin = false,
+  noNext = false,
 }: {
   question: Question | QuestionWithAnswers | null;
   answer: number | null;
   handleAnswer: (answerId: number) => Promise<void>;
   noMargin?: boolean;
+  noNext?: boolean;
 }) {
   const [layout, setLayout] = useState({
     questionY: 500, // give an initial height to avoid flashing
@@ -90,6 +92,15 @@ export function QuestionView({
             if (question) lookupQuestion(question);
           }}
         />
+        {!noNext && (
+          <Button
+            circular
+            icon={ArrowRight}
+            onPress={() => {
+              if (question && answer) handleAnswer(-1); // goes to the next question
+            }}
+          />
+        )}
         <Button
           circular
           icon={Search}

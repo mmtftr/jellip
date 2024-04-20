@@ -1,4 +1,4 @@
-function getQuestionsFromLines(lines) {
+function getQuestionsFromLines(lines, category = "vocabulary", level = "N1") {
   let qId = null;
   const mondai = lines
     .map((line) => {
@@ -16,8 +16,8 @@ function getQuestionsFromLines(lines) {
       return {
         id: Number(sp[0]),
         type: "question",
-        category: "vocabulary",
-        level: "N1",
+        category,
+        level,
         questionText: sp[1],
       };
     })
@@ -44,8 +44,8 @@ async function main() {
     "utf8"
   );
 
-  const questions = getQuestionsFromLines(csv.split("\n"));
-  const questions2 = getQuestionsFromLines(csv2.split("\n"));
+  const questions = getQuestionsFromLines(csv.split("\n"), "grammar");
+  const questions2 = getQuestionsFromLines(csv2.split("\n"), "vocabulary");
 
   console.log(questions.length, questions2.length);
   await require("fs/promises").writeFile(

@@ -145,11 +145,11 @@ const SettingsTab: React.FC = () => {
         <YStack gap="$2">
           <Paragraph>
             Correct: {correctCount} (
-            {((correctCount / answers.length) * 100).toFixed(2)}%)
+            {((correctCount / (answers.length || 1)) * 100).toFixed(2)}%)
           </Paragraph>
           <Paragraph>
             Incorrect: {incorrectCount} (
-            {((incorrectCount / answers.length) * 100).toFixed(2)}%)
+            {((incorrectCount / (answers.length || 1)) * 100).toFixed(2)}%)
           </Paragraph>
         </YStack>
       </XStack>

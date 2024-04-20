@@ -71,6 +71,7 @@ export default function TabLayout() {
               backgroundColor="$accentBackground"
             >
               <Heading size="$5">Jellip</Heading>
+              {props.options.headerRight?.({})}
             </XStack>
           );
         },
@@ -91,7 +92,7 @@ export default function TabLayout() {
             <TabBarIcon name="question-circle" color={color} />
           ),
           headerRight: () =>
-            // check if development
+            // reset db button for development
             __DEV__ && (
               <Button
                 marginEnd="$2"

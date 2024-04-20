@@ -1,7 +1,13 @@
 import { QuestionContent } from "@/components/QuestionContent";
 import { QuestionView } from "@/components/QuestionView";
 import { getAnswersToday } from "@/services/questions";
-import { MoveLeft, MoveRight } from "@tamagui/lucide-icons";
+import {
+  ArrowBigLeftDash,
+  ChevronsLeft,
+  ChevronsRight,
+  MoveLeft,
+  MoveRight,
+} from "@tamagui/lucide-icons";
 import React, { useState, useEffect } from "react";
 import { YStack, Heading, Paragraph, View, Button, XStack } from "tamagui";
 
@@ -31,20 +37,37 @@ export default function Review() {
           answer={answers[currentIndex]?.answers.answer}
           handleAnswer={async () => {}}
           noMargin
+          noNext
         />
         <YStack f={1} gap="$2">
           <XStack gap="$2" als="center">
             <Button
+              animation="medium"
+              icon={ChevronsLeft}
+              disabledStyle={{ opacity: 0.6 }}
+              disabled={currentIndex === 0}
+              onPress={() => setCurrentIndexBounded(0)}
+            />
+            <Button
+              animation="medium"
               icon={MoveLeft}
               disabled={currentIndex === 0}
-              disabledStyle={{ variant: "outlined" }}
+              disabledStyle={{ opacity: 0.6 }}
               onPress={() => setCurrentIndexBounded(currentIndex - 1)}
             />
             <Button
+              animation="medium"
               icon={MoveRight}
-              disabledStyle={{ variant: "outlined" }}
+              disabledStyle={{ opacity: 0.6 }}
               disabled={currentIndex === answers.length - 1}
               onPress={() => setCurrentIndexBounded(currentIndex + 1)}
+            />
+            <Button
+              animation="medium"
+              icon={ChevronsRight}
+              disabledStyle={{ opacity: 0.6 }}
+              disabled={currentIndex === answers.length - 1}
+              onPress={() => setCurrentIndexBounded(answers.length - 1)}
             />
           </XStack>
           <Paragraph textAlign="center" opacity={0.6} color="$accentColor">
