@@ -1,8 +1,20 @@
 import { config } from "@tamagui/config/v3";
 import { createAnimations } from "@tamagui/animations-moti";
+
 import { createTamagui } from "tamagui";
 
+import { Easing } from "react-native-reanimated";
+
 const animations = createAnimations({
+  superfastTransform: {
+    type: "spring",
+    damping: 20,
+    mass: 1.2,
+    stiffness: 250,
+    transform: {
+      stiffness: 1000,
+    },
+  },
   fast: {
     type: "spring",
     damping: 20,

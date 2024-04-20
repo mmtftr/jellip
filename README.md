@@ -15,6 +15,8 @@ This is a mobile application built with Expo and React Native that helps users p
 - [ ] Add more questions
 - [ ] Add practice test mode
 - [ ] Add listening questions mode
+- [ ] Add category filtering
+- [ ] Add question sets (enable importing and selection of which sets are being used to pull questions from)
 
 ## Installation
 

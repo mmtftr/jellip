@@ -4,9 +4,11 @@ import seedVals from "@/constants/seed.json";
 import { useEffect, useState } from "react";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native";
+import { getRandomQuestion } from "../services/questions";
 
 const seed = async () => {
   try {
+    console.log("Seeding database...");
     await db
       .insert(questions)
       .values(
@@ -25,8 +27,8 @@ const seed = async () => {
               : "unknown",
             level: levels.includes(level as any) ? (level as any) : "N5",
             correctAnswer,
-          })
-        )
+          }),
+        ),
       )
       .execute();
   } catch (e) {
@@ -48,7 +50,9 @@ export default function SeedProvider({ children }: React.PropsWithChildren) {
   const seeded = useAsyncStorage("seeded");
 
   useEffect(() => {
-    seeded.getItem().then((val) => {
+    Promise.all([getRandomQuestion(), seeded.getItem()]).then(([q, val]) => {
+      if (!q) return setShouldSeed(true);
+
       setShouldSeed(val === "true" ? false : true);
     });
   }, []);

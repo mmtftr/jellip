@@ -1,4 +1,4 @@
-import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import { migrate, useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../drizzle/migrations";
 import { View, Text } from "react-native";
 import React from "react";

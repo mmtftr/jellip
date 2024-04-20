@@ -1,32 +1,13 @@
-import {
-  YStack,
-  XStack,
-  AnimatePresence,
-  View,
-  ScrollView,
-  Button,
-} from "tamagui";
+import { AnimatePresence, View } from "tamagui";
 import { useCallback, useEffect, useState } from "react";
 import {
   getRandomQuestion,
   QuestionWithAnswers,
   submitAnswer,
-} from "../../services/questions";
+} from "@/services/questions";
 import { useToastController } from "@tamagui/toast";
 import * as zod from "zod";
-import { AnswerButton } from "../../components/AnswerButton";
-import { QuestionContent } from "../../components/QuestionContent";
-import {
-  BookOpen,
-  JapaneseYen,
-  Search,
-  SearchCheck,
-  SearchCode,
-  SearchX,
-} from "@tamagui/lucide-icons";
-import { Linking } from "react-native";
-import * as WebBrowser from "expo-web-browser";
-import { SearchBar } from "react-native-screens";
+import { QuestionView } from "@/components/QuestionView";
 
 const questionSchema = zod.object({
   id: zod.number(),
@@ -37,12 +18,10 @@ const questionSchema = zod.object({
   correctAnswer: zod.number().lte(3).gte(0),
 });
 
-export default function TabOneScreen() {
+function QuestionManager() {
   const [answer, setAnswer] = useState<null | number>(null);
-
   const [question, setQuestion] = useState<QuestionWithAnswers | null>(null);
   const [loading, setLoading] = useState(false);
-
   const toast = useToastController();
 
   const fetchQuestion = useCallback(
@@ -72,10 +51,12 @@ export default function TabOneScreen() {
         setLoading(false);
       }
     },
-    [setQuestion]
+    [setQuestion],
   );
 
   useEffect(() => {
+    if (question) return;
+    setAnswer(null);
     fetchQuestion();
   }, []);
 
@@ -91,100 +72,30 @@ export default function TabOneScreen() {
     setAnswer(answerId);
   };
 
-  const [layout, setLayout] = useState({
-    questionY: 0,
-    containerY: 0,
-    paragraphHeight: 0,
-  });
-
   return (
-    <YStack
-      onLayout={(e) => {
-        const y = e.nativeEvent.layout.y;
-        setLayout((l) => ({ ...l, containerY: y }));
-      }}
-      height="100%"
-      paddingHorizontal="$8"
-      alignItems="center"
-      justifyContent="flex-end"
-      gap="$4"
-    >
-      <AnimatePresence>
-        <View
-          overflow="visible"
-          width="100%"
-          animation="fast"
-          key={question?.question.toString()}
-          exitStyle={{ transform: [{ translateX: 200 }], opacity: 0 }}
-          enterStyle={{ transform: [{ translateX: -200 }], opacity: 0 }}
-          onLayout={(e) => {
-            const y = e.nativeEvent.layout.y;
-            setLayout((l) => ({ ...l, questionY: y }));
-          }}
-          transform={[{ translateX: 0 }]}
-        >
-          <ScrollView
-            bottom={0}
-            left={0}
-            right={0}
-            position="absolute"
-            width="100%"
-            onContentSizeChange={(_, h) => {
-              setLayout((l) => ({ ...l, paragraphHeight: h }));
-            }}
-            contentContainerStyle={{ flexGrow: 1 }}
-            height={layout.questionY - layout.containerY}
-            scrollEnabled={layout.paragraphHeight > layout.questionY}
-          >
-            <QuestionContent question={question} />
-          </ScrollView>
-        </View>
-      </AnimatePresence>
-      <XStack gap="$2" flexWrap="wrap">
-        {question?.answers.map((answerText, idx) => (
-          <AnswerButton
-            key={idx}
-            answerText={answerText}
-            isCorrect={idx === question!.correctAnswer}
-            selected={answer === null ? answer : idx === answer}
-            onPress={() => handleAnswer(idx)}
-          />
-        ))}
-      </XStack>
-      <XStack
-        justifyContent="space-between"
-        width="100%"
-        marginTop="$-2"
-        gap="$2"
-        pointerEvents={answer !== null ? "auto" : "none"}
-        opacity={answer !== null ? 1 : 0}
-        animation="medium"
-        theme="alt2"
+    <AnimatePresence>
+      <View
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        animation="fast"
+        key={question?.question.toString()}
+        exitStyle={{ transform: [{ translateX: 200 }], opacity: 0 }}
+        enterStyle={{ transform: [{ translateX: -200 }], opacity: 0 }}
+        transform={[{ translateX: 0 }]}
       >
-        <Button
-          circular
-          icon={BookOpen}
-          onPress={() => {
-            WebBrowser.openBrowserAsync(
-              `https://jisho.org/search/${encodeURIComponent(
-                (question?.question || "") + (question?.answers.join(" ") || "")
-              )}`
-            );
-          }}
+        <QuestionView
+          question={question}
+          answer={answer}
+          handleAnswer={handleAnswer}
         />
-        <Button
-          circular
-          icon={Search}
-          onPress={() => {
-            WebBrowser.openBrowserAsync(
-              `https://www.google.com/search?q=${encodeURIComponent(
-                (question?.answers[question.correctAnswer] || "") + " 文法"
-              )}`
-            );
-          }}
-        />
-      </XStack>
-      <View marginBottom="40%" />
-    </YStack>
+      </View>
+    </AnimatePresence>
   );
+}
+
+export default function TabOneScreen() {
+  return <QuestionManager />;
 }

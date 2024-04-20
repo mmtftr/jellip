@@ -1,16 +1,15 @@
-import { Linking } from "react-native";
-import { Paragraph, View } from "tamagui";
+import { Link } from "expo-router";
+import { Heading, Paragraph, YStack } from "tamagui";
 
 export default function Home() {
   return (
-    <View>
-      <Paragraph>Home</Paragraph>
-      <Paragraph onPress={() => Linking.openURL("https://expo.dev")}>
-        Learn more about Expo
+    <YStack gap="$4" padding="$8">
+      <Heading>Welcome</Heading>
+      <Paragraph>
+        Welcome to Jellip - a JLPT practice tool. Start grinding away by going
+        to the
+        <Link href="/question"> question tab</Link>.
       </Paragraph>
-      <Paragraph onPress={() => Linking.openURL("https://reactnavigation.org")}>
-        Learn more about React Navigation
-      </Paragraph>
-    </View>
+    </YStack>
   );
 }

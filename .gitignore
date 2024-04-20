@@ -41,3 +41,6 @@ expo-env.d.ts
 # @end expo-cli
 
 scripts/data
+
+# ignore ios
+ios/

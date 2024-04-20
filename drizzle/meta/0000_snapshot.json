@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "79c1b8ed-fc3a-4eb6-a0ad-5fdf253b533f",
+  "id": "2e8da586-2255-4fe0-8c91-1d81e48f299a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "answers": {
@@ -27,6 +27,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
         }
       },
       "indexes": {},
@@ -48,6 +56,36 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "questionSets": {
+      "name": "questionSets",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "questions": {
       "name": "questions",
       "columns": {
@@ -65,6 +103,22 @@
           "notNull": true,
           "autoincrement": false
         },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'unknown'"
+        },
+        "level": {
+          "name": "level",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'N5'"
+        },
         "answers": {
           "name": "answers",
           "type": "text",
@@ -78,10 +132,31 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "questionSet": {
+          "name": "questionSet",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "questions_questionSet_questionSets_id_fk": {
+          "name": "questions_questionSet_questionSets_id_fk",
+          "tableFrom": "questions",
+          "tableTo": "questionSets",
+          "columnsFrom": [
+            "questionSet"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

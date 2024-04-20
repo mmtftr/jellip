@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1713265024443,
-      "tag": "0000_same_prodigy",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1713275283868,
-      "tag": "0001_lush_galactus",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1713535837267,
-      "tag": "0002_ambitious_risque",
+      "when": 1713605027262,
+      "tag": "0000_blue_moon_knight",
       "breakpoints": true
     }
   ]

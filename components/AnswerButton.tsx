@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button, Theme, ThemeName } from "tamagui";
 
 export const AnswerButton = ({
@@ -23,9 +24,9 @@ export const AnswerButton = ({
   return (
     <Theme name="blue">
       <Button
-        animation={{ theme: "fast" }}
+        animation="superfastTransform"
         minWidth="40%"
-        pressStyle={{ scale: 0.95 }}
+        pressStyle={{ scale: 0.9 }}
         flex={1}
         theme={theme}
         size={"$5"}
