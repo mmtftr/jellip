@@ -1,11 +1,12 @@
 import { YStack, Paragraph, XStack } from "tamagui";
-import { QuestionWithAnswers } from "../services/questions";
+import { Question, QuestionWithAnswers } from "../services/questions";
 import { Leaf, StarFull, StarOff } from "@tamagui/lucide-icons";
+import React from "react";
 
 export function QuestionContent({
   question,
 }: {
-  question: QuestionWithAnswers | null;
+  question: Question | QuestionWithAnswers | null;
 }) {
   return (
     <YStack gap="$2" flexDirection="column-reverse" minHeight="100%">
@@ -23,15 +24,21 @@ export function QuestionContent({
           {question?.category} - {question?.level}
         </Paragraph>
         <XStack gap="$2">
-          {!question?.userAnswers.length && <Leaf size="$1" color="$green9" />}
-          {question?.userAnswers.slice(-3).map((answer) => {
-            const isCorrect = answer.answer === question.correctAnswer;
-            if (isCorrect) {
-              return <StarFull key={answer.id} size="$1" color="green" />;
-            } else {
-              return <StarOff key={answer.id} size="$1" color="red" />;
-            }
-          })}
+          {question && "userAnswers" in question && (
+            <React.Fragment>
+              {!question.userAnswers.length && (
+                <Leaf size="$1" color="$green9" />
+              )}
+              {question.userAnswers.slice(-3).map((answer) => {
+                const isCorrect = answer.answer === question.correctAnswer;
+                if (isCorrect) {
+                  return <StarFull key={answer.id} size="$1" color="green" />;
+                } else {
+                  return <StarOff key={answer.id} size="$1" color="red" />;
+                }
+              })}
+            </React.Fragment>
+          )}
         </XStack>
       </XStack>
     </YStack>

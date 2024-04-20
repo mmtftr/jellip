@@ -11,9 +11,17 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "react-native";
 import MigrationProvider from "../components/MigrationProvider";
-import { TamaguiProvider, Theme } from "tamagui";
-import { ToastProvider, ToastViewport } from "@tamagui/toast";
+import { TamaguiProvider, Theme, YStack } from "tamagui";
+import {
+  Toast,
+  ToastProvider,
+  ToastViewport,
+  useToastState,
+} from "@tamagui/toast";
 import { tamaguiConfig } from "@/constants/tamagui";
+import { useRehydrate } from "@colorfy-software/zfy";
+import { stores } from "@/services/store";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -36,6 +44,9 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
+  const rehydrated = true;
+  // useRehydrate(stores);
+
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
@@ -47,15 +58,42 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
+  if (!loaded || !rehydrated) {
     return null;
   }
 
   return <RootLayoutNav />;
 }
+const CurrentToast = () => {
+  const currentToast = useToastState();
+
+  if (!currentToast || currentToast.isHandledNatively) return null;
+  return (
+    <Toast
+      key={currentToast.id}
+      duration={currentToast.duration}
+      enterStyle={{ opacity: 0, scale: 0.5, y: -25 }}
+      exitStyle={{ opacity: 0, scale: 1, y: -20 }}
+      y={0}
+      opacity={1}
+      scale={1}
+      animation="fast"
+      width="100%"
+      viewportName={currentToast.viewportName}
+    >
+      <YStack w="100%" p="$4">
+        <Toast.Title>{currentToast.title}</Toast.Title>
+        {!!currentToast.message && (
+          <Toast.Description>{currentToast.message}</Toast.Description>
+        )}
+      </YStack>
+    </Toast>
+  );
+};
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { top } = useSafeAreaInsets();
 
   return (
     <TamaguiProvider
@@ -64,10 +102,12 @@ function RootLayoutNav() {
     >
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <ToastProvider burntOptions={{ from: "top" }}>
-          <ToastViewport />
+          <ToastViewport position="absolute" left={0} right={0} top={top} />
+          <CurrentToast />
           <MigrationProvider>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="review" options={{ presentation: "modal" }} />
             </Stack>
           </MigrationProvider>
         </ToastProvider>

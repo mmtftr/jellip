@@ -1,6 +1,7 @@
 import { YStack, XStack, View, ScrollView, Button } from "tamagui";
 import { useState } from "react";
 import {
+  Question,
   QuestionWithAnswers,
   lookupAnswer,
   lookupQuestion,
@@ -14,10 +15,12 @@ export function QuestionView({
   question,
   answer,
   handleAnswer,
+  noMargin = false,
 }: {
-  question: QuestionWithAnswers | null;
+  question: Question | QuestionWithAnswers | null;
   answer: number | null;
   handleAnswer: (answerId: number) => Promise<void>;
+  noMargin?: boolean;
 }) {
   const [layout, setLayout] = useState({
     questionY: 500, // give an initial height to avoid flashing
@@ -31,8 +34,7 @@ export function QuestionView({
         const y = e.nativeEvent.layout.y;
         setLayout((l) => ({ ...l, containerY: y }));
       }}
-      height="100%"
-      paddingHorizontal="$8"
+      flexGrow={1}
       justifyContent="flex-end"
       gap="$4"
     >
@@ -97,7 +99,7 @@ export function QuestionView({
           }}
         />
       </XStack>
-      <View marginBottom="40%" />
+      {!noMargin && <View marginBottom="40%" />}
     </YStack>
   );
 }

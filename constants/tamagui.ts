@@ -3,7 +3,12 @@ import { createAnimations } from "@tamagui/animations-moti";
 
 import { createTamagui } from "tamagui";
 
-import { Easing } from "react-native-reanimated";
+export const fastSpring = {
+  type: "spring",
+  damping: 20,
+  mass: 1.2,
+  stiffness: 250,
+} as const;
 
 const animations = createAnimations({
   superfastTransform: {
@@ -15,12 +20,7 @@ const animations = createAnimations({
       stiffness: 1000,
     },
   },
-  fast: {
-    type: "spring",
-    damping: 20,
-    mass: 1.2,
-    stiffness: 250,
-  },
+  fast: fastSpring,
   medium: {
     type: "spring",
     damping: 10,
