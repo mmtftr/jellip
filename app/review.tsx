@@ -9,7 +9,7 @@ import {
   MoveRight,
 } from "@tamagui/lucide-icons";
 import React, { useState, useEffect } from "react";
-import { YStack, Heading, Paragraph, View, Button, XStack } from "tamagui";
+import { YStack, Heading, Paragraph, Button, XStack } from "tamagui";
 
 export default function Review() {
   const [answers, setAnswers] = useState<
