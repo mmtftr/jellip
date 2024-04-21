@@ -24,8 +24,9 @@ const getRandomQuestion = async ({
         .where(
           and(
             categoryFilter && inArray(questions.category, categoryFilter),
-            levelFilter && inArray(questions.level, levelFilter)
-          )
+            levelFilter && inArray(questions.level, levelFilter),
+            // eq(questions.id, 7575),
+          ),
         )
         .orderBy(sql`random()`)
         .limit(1)
@@ -62,7 +63,7 @@ const lookupQuestion = async (question: Question) => {
 
   if (__DEV__ || (await canOpenURL("shirabelookup://search")))
     return await openURL(
-      `shirabelookup://search?w=${encodeURIComponent(lookupStr)}`
+      `shirabelookup://search?w=${encodeURIComponent(lookupStr)}`,
     );
 
   // fallback to Jisho
@@ -72,8 +73,8 @@ const lookupQuestion = async (question: Question) => {
 const lookupAnswer = async (answer: string) => {
   openBrowserAsync(
     `https://www.google.com/search?q=${encodeURIComponent(
-      (answer || "") + " 文法"
-    )}`
+      (answer || "") + " 文法",
+    )}`,
   );
 };
 

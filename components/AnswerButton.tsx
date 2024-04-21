@@ -11,7 +11,7 @@ export const AnswerButton = ({
   isCorrect: boolean;
   // null means nothing has been selected
   selected: boolean | null;
-  onPress: () => {};
+  onPress: () => void;
 }) => {
   let theme: ThemeName | undefined = "active";
   if (selected !== null) {

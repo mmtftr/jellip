@@ -119,7 +119,7 @@ const SettingsTab: React.FC = () => {
         Number of questions solved today: {numberOfQuestionsSolvedToday}
       </Text>
       {numberOfQuestionsSolvedToday > 0 && (
-        <YStack gap="$2">
+        <YStack gap="$4">
           <XStack gap="$4">
             <View w="50%" aspectRatio={1}>
               <PieChart

@@ -9,6 +9,7 @@ import { useToastController } from "@tamagui/toast";
 import * as zod from "zod";
 import { QuestionView } from "@/components/QuestionView";
 import { settingsStore } from "@/services/store";
+import { usePermuteAnswers } from "../../components/usePermuteAnswers";
 
 const questionSchema = zod.object({
   id: zod.number(),
@@ -20,8 +21,11 @@ const questionSchema = zod.object({
 });
 
 function QuestionManager() {
+  const [solvedId, setSolvedId] = useState(0);
   const [answer, setAnswer] = useState<null | number>(null);
-  const [question, setQuestion] = useState<QuestionWithAnswers | null>(null);
+  const [questionBase, setQuestion] = useState<QuestionWithAnswers | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
   const toast = useToastController();
 
@@ -56,13 +60,15 @@ function QuestionManager() {
           });
           return;
         }
+        console.log(question.id);
 
+        setSolvedId((id) => id + 1);
         setQuestion(question);
       } finally {
         setLoading(false);
       }
     },
-    [setQuestion]
+    [setQuestion],
   );
 
   useEffect(() => {
@@ -70,21 +76,27 @@ function QuestionManager() {
     fetchQuestion();
   }, [categoryFilter, levelFilter]);
 
-  const handleAnswer = async (answerId: number) => {
+  const handleAnswerBase = async (answerId: number) => {
     if (answer !== null) {
       setAnswer(null);
       fetchQuestion();
       return;
     }
-    if (!question) return;
+    if (!questionBase) return;
 
-    await submitAnswer(question?.id, answerId);
+    await submitAnswer(questionBase?.id, answerId);
     setAnswer(answerId);
   };
 
+  const {
+    question,
+    handleAnswer,
+    answer: permutedAnswer,
+  } = usePermuteAnswers(questionBase, handleAnswerBase, answer);
+
   return (
     <AnimatePresence>
-      {question && (
+      {questionBase && (
         <View
           position="absolute"
           top={0}
@@ -93,19 +105,19 @@ function QuestionManager() {
           bottom={0}
           animation="fast"
           paddingHorizontal="$8"
-          key={question?.question.toString()}
+          key={solvedId} // animate out even if it's the same question
           exitStyle={{ transform: [{ translateX: 200 }], opacity: 0 }}
           enterStyle={{ transform: [{ translateX: -200 }], opacity: 0 }}
           transform={[{ translateX: 0 }]}
         >
           <QuestionView
             question={question}
-            answer={answer}
+            answer={permutedAnswer}
             handleAnswer={handleAnswer}
           />
         </View>
       )}
-      {!question && !loading && (
+      {!questionBase && !loading && (
         <YStack
           f={1}
           enterStyle={{ opacity: 0 }}

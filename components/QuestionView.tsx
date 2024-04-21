@@ -20,7 +20,7 @@ export function QuestionView({
 }: {
   question: Question | QuestionWithAnswers | null;
   answer: number | null;
-  handleAnswer: (answerId: number) => Promise<void>;
+  handleAnswer: (answerId: number) => void;
   noMargin?: boolean;
   noNext?: boolean;
 }) {
@@ -57,6 +57,9 @@ export function QuestionView({
           onContentSizeChange={(_, h) => {
             setLayout((l) => ({ ...l, paragraphHeight: h }));
           }}
+          showsVerticalScrollIndicator={
+            layout.paragraphHeight > layout.questionY
+          }
           contentContainerStyle={{ flexGrow: 1 }}
           height={layout.questionY - layout.containerY}
           scrollEnabled={layout.paragraphHeight > layout.questionY}
