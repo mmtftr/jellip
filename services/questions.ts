@@ -25,7 +25,6 @@ const getRandomQuestion = async ({
           and(
             categoryFilter && inArray(questions.category, categoryFilter),
             levelFilter && inArray(questions.level, levelFilter),
-            // eq(questions.id, 7575),
           ),
         )
         .orderBy(sql`random()`)

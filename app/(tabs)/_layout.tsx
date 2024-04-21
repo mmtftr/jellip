@@ -71,7 +71,7 @@ export default function TabLayout() {
               backgroundColor="$accentBackground"
             >
               <Heading size="$5">Jellip</Heading>
-              {props.options.headerRight?.({})}
+              {/* {props.options.headerRight?.({})} */}
             </XStack>
           );
         },

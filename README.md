@@ -5,50 +5,57 @@ This is a mobile application built with Expo and React Native that helps users p
 ## Features
 
 - Display JLPT practice questions
-- Track user answers
+- Tracks your answers
 - User-friendly UI
-- [ ] Show statistics
+- Filtering questions by level and type
+- Review today's questions
+- Today's statistics
+- Shirabe Jisho lookup (if installed)
+- [ ] Add more statistics
+- [x] Add question sets
+  - [ ] Add importing
+  - [ ] Add question set filters
 - [ ] Optimize question selection to show failed questions more often and show successful ones less
 - [ ] Implement kuromoji integration and allow per-word lookup on press
 - [ ] Implement user accounts and allow users to track their progress
 - [ ] Add timer
 - [ ] Add more questions
 - [ ] Add practice test mode
-- [ ] Add listening questions mode
-- [ ] Add category filtering
-- [ ] Add question sets (enable importing and selection of which sets are being used to pull questions from)
+- [ ] Add listening questions
 
 ## Installation
 
 1. Clone the repository:
 
-  ```bash
-  git clone https://github.com/mmtftr/jlpt-practice-app.git
-  ```
+```bash
+git clone https://github.com/mmtftr/jlpt-practice-app.git
+```
 
 2. Navigate to the project directory:
 
-  ```bash
-  cd jlpt-practice-app
-  ```
+```bash
+cd jlpt-practice-app
+```
 
 3. Install dependencies:
 
-  ```bash
-  yarn install
-  ```
+```bash
+yarn install
+```
 
 4. Start the Expo development server:
 
-  ```bash
-  yarn start
-  ```
+```bash
+yarn start
+```
 
 5. Use the Expo app on your mobile device to scan the QR code displayed in the terminal or in the browser.
 
 ## Screenshots
 
-![Home Screen](/assets/images/screenshot1.png "Home Screen")
+![Dark Mode Questions](/assets/images/screenshot1.png "Questions")
+![Questions](/assets/images/screenshot2.png "Questions")
+![Review](/assets/images/screenshot3.png "Questions")
 
 ## Usage
 
