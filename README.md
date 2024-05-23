@@ -10,6 +10,7 @@ This is a mobile application built with Expo and React Native that helps users p
 - Filtering questions by level and type
 - Review today's questions
 - Today's statistics
+- Randomizes answer order
 - Shirabe Jisho lookup (if installed)
 - [ ] Add more statistics
 - [x] Add question sets

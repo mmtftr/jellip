@@ -91,21 +91,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="question-circle" color={color} />
           ),
-          headerRight: () =>
-            // reset db button for development
-            __DEV__ && (
-              <Button
-                marginEnd="$2"
-                icon={Delete}
-                variant="outlined"
-                color="red"
-                theme="red_active"
-                size="$2"
-                onPress={resetAndReseed}
-              >
-                Reseed
-              </Button>
-            ),
         }}
       />
       <Tabs.Screen

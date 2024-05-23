@@ -20,6 +20,9 @@ import { answersTodayStore, settingsStore } from "@/services/store";
 import { MultipleSelectBox, SelectBox } from "../../components/SelectBox";
 import { PieChart } from "@/components/PieChart";
 import { useRouter } from "expo-router";
+import { Alert } from "react-native";
+import { resetAndReseed } from "../../components/SeedProvider";
+import { Delete } from "@tamagui/lucide-icons";
 
 const levelItems: { name: Question["level"] }[] = [
   { name: "N1" },
@@ -149,6 +152,30 @@ const SettingsTab: React.FC = () => {
           <Button onPress={() => router.push("/review")}>Review</Button>
         </YStack>
       )}
+      <Button
+        marginEnd="$2"
+        icon={Delete}
+        variant="outlined"
+        color="red"
+        theme="red_active"
+        size="$2"
+        onPress={() => {
+          Alert.alert("Are You Sure?", "This may delete some questions", [
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+            {
+              text: "Reset",
+              onPress: () => {
+                resetAndReseed();
+              },
+            },
+          ]);
+        }}
+      >
+        Reset Questions
+      </Button>
     </YStack>
   );
 };

@@ -25,7 +25,7 @@ export const AnswerButton = ({
     <Theme name="blue">
       <Button
         animation="superfastTransform"
-        minWidth="40%"
+        minWidth={answerText.length > 10 ? "90%" : "40%"}
         pressStyle={{ scale: 0.9 }}
         flex={1}
         theme={theme}

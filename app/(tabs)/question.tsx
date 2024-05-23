@@ -60,7 +60,6 @@ function QuestionManager() {
           });
           return;
         }
-        console.log(question.id);
 
         setSolvedId((id) => id + 1);
         setQuestion(question);

@@ -1,5 +1,11 @@
 import { db } from "@/services/db"; // drizzle
-import { answers, categories, levels, questions } from "../db/schema";
+import {
+  answers,
+  categories,
+  levels,
+  questionSets,
+  questions,
+} from "../db/schema";
 import seedVals from "@/constants/seed.json";
 import { useEffect, useState } from "react";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
@@ -8,38 +14,51 @@ import { getRandomQuestion } from "../services/questions";
 
 const seed = async () => {
   try {
+    const allValues = seedVals.questions.map(
+      ({
+        id,
+        questionText: question,
+        answers,
+        correctAnswer,
+        level,
+        category,
+        questionSet,
+      }) => ({
+        id,
+        question,
+        answers,
+        category: categories.includes(category as any)
+          ? (category as any)
+          : "unknown",
+        level: levels.includes(level as any) ? (level as any) : "N5",
+        correctAnswer,
+        questionSet,
+      }),
+    );
     console.log("Seeding database...");
-    await db
-      .insert(questions)
-      .values(
-        seedVals.questions.map(
-          ({
-            questionText: question,
-            answers,
-            correctAnswer,
-            level,
-            category,
-          }) => ({
-            question,
-            answers,
-            category: categories.includes(category as any)
-              ? (category as any)
-              : "unknown",
-            level: levels.includes(level as any) ? (level as any) : "N5",
-            correctAnswer,
-          }),
-        ),
-      )
-      .execute();
+    await db.insert(questionSets).values(seedVals.questionSets).execute();
+
+    // insert 1K questions at a time.
+    for (let i = 0; i < allValues.length / 1000; i++) {
+      await db
+        .insert(questions)
+        .values(allValues.slice(i * 1000, (i + 1) * 1000))
+        .execute();
+    }
   } catch (e) {
     console.error(e);
   }
 };
+
 export const resetAndReseed = async () => {
   try {
-    await db.delete(answers).execute();
+    const answerObjects = await db.delete(answers).returning().execute();
     await db.delete(questions).execute();
+    await db.delete(questionSets).execute();
     await seed();
+
+    // try to restore answers
+    await db.insert(answers).values(answerObjects).execute();
   } catch (e) {
     console.error(e);
   }

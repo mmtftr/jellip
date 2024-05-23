@@ -1,4 +1,4 @@
-function getQuestionsFromLines(lines, category = "vocabulary", level = "N1") {
+function getQuestionsFromCsv(lines, category = "vocabulary", level = "N1") {
   let qId = null;
   const mondai = lines
     .map((line) => {
@@ -33,33 +33,80 @@ function getQuestionsFromLines(lines, category = "vocabulary", level = "N1") {
 
   return questions;
 }
+function postProcess(question) {
+  return {
+    ...question,
+    questionText: question.questionText.trim(),
+    answers: question.answers.map((a) =>
+      a.replace("）", "").replace(")", "").trim(),
+    ),
+  };
+}
 
 async function main() {
+  console.log(
+    postProcess({
+      id: 8072,
+      category: "vocabulary",
+      level: "N5",
+      questionText: "（たくしー）を　よんでください。",
+      answers: ["）クタシー", "）タクシー", "）クツツー", "）タクツー"],
+      correctAnswer: 1,
+      questionSet: 2,
+    }),
+  );
   const csv = await require("fs/promises").readFile(
     "./data/mondai.csv",
-    "utf8"
+    "utf8",
   );
   const csv2 = await require("fs/promises").readFile(
     "./data/mondai2.csv",
-    "utf8"
+    "utf8",
   );
 
-  const questions = getQuestionsFromLines(csv.split("\n"), "grammar");
-  const questions2 = getQuestionsFromLines(csv2.split("\n"), "vocabulary");
+  const csvQuestions1 = getQuestionsFromCsv(csv.split("\n"), "grammar");
+  const csvQuestions2 = getQuestionsFromCsv(csv2.split("\n"), "vocabulary");
 
-  console.log(questions.length, questions2.length);
+  const csvQuestions = new Array()
+    .concat(csvQuestions1, csvQuestions2)
+    .map((q, id) => ({ ...q, id, questionSet: 1 }));
+
+  const jlptQuestionsData = require("./data/jlpt_questions/output.json");
+
+  const questions = csvQuestions
+    .concat(
+      jlptQuestionsData.questions.map((q, id) => ({
+        ...q,
+        id: id + csvQuestions.length,
+        questionSet: 2,
+      })),
+    )
+    .map(postProcess);
+
+  const questionSets = [
+    {
+      id: 1,
+      name: "default",
+      description: "Default question set",
+    },
+    {
+      id: 2,
+      name: "External 1",
+      description: "Questions from jlpt_questions Github repository.",
+    },
+  ];
+
   await require("fs/promises").writeFile(
     "../constants/seed.json",
     JSON.stringify(
       {
-        questions: new Array()
-          .concat(questions, questions2)
-          .map((q, id) => ({ ...q, id })),
+        questions,
+        questionSets,
       },
       0,
-      2
+      2,
     ),
-    "utf8"
+    "utf8",
   );
 }
 main();
