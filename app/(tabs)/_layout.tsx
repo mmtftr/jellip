@@ -85,6 +85,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="grammar"
+        options={{
+          title: "Grammar",
+          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="question"
         options={{
           title: "Question",

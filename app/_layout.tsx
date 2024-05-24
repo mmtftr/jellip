@@ -3,9 +3,10 @@ import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
+  useRoute,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
@@ -106,7 +107,14 @@ function RootLayoutNav() {
           <CurrentToast />
           <MigrationProvider>
             <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="(tabs)"
+                options={{ headerShown: false, title: "Home" }}
+              />
+              <Stack.Screen
+                name="grammar/[id]"
+                options={{ title: "Grammar" }}
+              />
               <Stack.Screen name="review" options={{ presentation: "modal" }} />
             </Stack>
           </MigrationProvider>
