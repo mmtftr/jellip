@@ -15,19 +15,18 @@ import {
   answers,
 } from "../../db/schema";
 import SeedProvider from "../SeedProvider";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import migrations from "../../drizzle/migrations";
 import { db } from "@/services/db";
 import { count, eq, sql } from "drizzle-orm";
 import { Text } from "react-native";
 
 jest.useFakeTimers();
 jest.mock("@/services/db");
+const { reset, migrate } = require("@/services/db");
 jest.mock("@react-native-async-storage/async-storage");
 
 describe("SeedProvider", () => {
   beforeAll(() => {
-    migrate(db, { migrationsFolder: "./drizzle/" });
+    migrate();
   });
 
   it("should render children after seed", async () => {
@@ -103,10 +102,7 @@ describe("SeedProvider", () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    // delete all tables
-    await db.delete(questions).execute();
-    await db.delete(questionSets).execute();
-    await db.delete(answers).execute();
+    await reset();
   });
 });
 

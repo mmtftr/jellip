@@ -45,6 +45,10 @@ export const answers = sqliteTable("answers", {
   questionId: integer("questionId")
     .notNull()
     .references(() => questions.id),
+  /**
+   * the index of the answer
+   * check the question for the correct answer idx
+   */
   answer: integer("answer").notNull(),
   timestamp: text("date")
     .default(sql`(CURRENT_TIMESTAMP)`)

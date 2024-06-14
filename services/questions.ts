@@ -1,6 +1,6 @@
 import { db } from "@/services/db";
 import { answers, questions } from "@/db/schema";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, countDistinct, eq, exists, inArray, sql } from "drizzle-orm";
 import { openBrowserAsync } from "expo-web-browser";
 import { canOpenURL, openURL } from "expo-linking";
 import { answersTodayStore } from "./store";
@@ -24,8 +24,8 @@ const getRandomQuestion = async ({
         .where(
           and(
             categoryFilter && inArray(questions.category, categoryFilter),
-            levelFilter && inArray(questions.level, levelFilter),
-          ),
+            levelFilter && inArray(questions.level, levelFilter)
+          )
         )
         .orderBy(sql`random()`)
         .limit(1)
@@ -62,7 +62,7 @@ const lookupQuestion = async (question: Question) => {
 
   if (__DEV__ || (await canOpenURL("shirabelookup://search")))
     return await openURL(
-      `shirabelookup://search?w=${encodeURIComponent(lookupStr)}`,
+      `shirabelookup://search?w=${encodeURIComponent(lookupStr)}`
     );
 
   // fallback to Jisho
@@ -72,16 +72,58 @@ const lookupQuestion = async (question: Question) => {
 const lookupAnswer = async (answer: string) => {
   openBrowserAsync(
     `https://www.google.com/search?q=${encodeURIComponent(
-      (answer || "") + " 文法",
-    )}`,
+      (answer || "") + " 文法"
+    )}`
   );
 };
 
+/**
+ * Return the statistics of how many questions has been seen at least once
+ * in the filtered question list.
+ *
+ * @param filters { categoryFilter?: QuestionWithAnswers["category"][]; levelFilter?: QuestionWithAnswers["level"][]; } - optional
+ */
+const getQuestionSeenState = async ({
+  categoryFilter,
+  levelFilter,
+}: {
+  categoryFilter?: QuestionWithAnswers["category"][];
+  levelFilter?: QuestionWithAnswers["level"][];
+} = {}): { seen: number; total: number } => {
+  const [{ seen }] = await db
+    .select({
+      seen: countDistinct(questions.id),
+    })
+    .from(questions)
+    .where(
+      and(
+        categoryFilter && inArray(questions.category, categoryFilter),
+        levelFilter && inArray(questions.level, levelFilter),
+        exists(
+          db.select().from(answers).where(eq(answers.questionId, questions.id))
+        )
+      )
+    );
+
+  const [{ total }] = await db
+    .select({ total: countDistinct(questions.id) })
+    .from(questions)
+    .where(
+      and(
+        categoryFilter && inArray(questions.category, categoryFilter),
+        levelFilter && inArray(questions.level, levelFilter)
+      )
+    );
+
+  return { seen, total };
+};
+
 export {
-  getRandomQuestion,
-  getAnswersToday,
   getAnswers,
-  submitAnswer,
+  getAnswersToday,
+  getQuestionSeenState,
+  getRandomQuestion,
   lookupAnswer,
   lookupQuestion,
+  submitAnswer,
 };

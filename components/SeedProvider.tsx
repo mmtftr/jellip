@@ -24,8 +24,6 @@ const seedNecessarySets = async () => {
       ).map((set) => set.id)
     );
 
-    console.log("Seeding database...");
-
     await db
       .insert(questionSets)
       .values(

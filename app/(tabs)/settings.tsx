@@ -106,10 +106,11 @@ const SettingsTab: React.FC = () => {
     () =>
       answers.filter((s) => s.questions.correctAnswer === s.answers.answer)
         .length,
-    [answers],
+    [answers]
   );
   const incorrectCount = answers.length - correctCount;
   const router = useRouter();
+
   return (
     <YStack padding="$8" gap="$4">
       <Heading>Settings</Heading>
