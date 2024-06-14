@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { View, Text, Separator, Stack, XStack } from "tamagui";
+import { View, Text, Separator, Stack, XStack, ScrollView } from "tamagui";
 import Details from "../scripts/data/grammar_details.json";
 import { Link } from "expo-router";
 
@@ -34,12 +34,12 @@ export default function ({
 }: Props) {
   const see_also_items = useMemo(
     () => see_also?.map((id) => Details.find((a) => a.id === id)),
-    [see_also],
+    [see_also]
   );
   return (
-    <Stack gap="$4" borderWidth={1} padding="$4">
+    <Stack gap="$4" padding="$4">
       <Stack gap="$2">
-        <Text fontSize="$9" fontWeight="bold" color="$gray11">
+        <Text fontSize="$9" fontWeight="bold">
           {main_grammar}
         </Text>
         {reading && (
@@ -51,64 +51,70 @@ export default function ({
           {jlpt_level}
         </Text>
       </Stack>
-      <Separator borderColor="$gray6" />
       <Stack gap="$5">
+        <Separator borderColor="$gray6" />
         <Stack gap="$2">
-          <Text fontSize="$7" fontWeight="bold" color="$gray11">
+          <Text fontSize="$7" fontWeight="bold">
             Meaning
           </Text>
           <Stack gap="$1.5">
             <Text fontSize="$5" color="$gray11">
               {actual}
             </Text>
-            <Text fontSize="$5" color="$gray8">
+            <Text fontSize="$5" color="$gray9">
               {context}
             </Text>
           </Stack>
         </Stack>
-        <Separator borderColor="$gray6" />
         {formation.length > 0 && (
           <Stack gap="$4">
-            <Text fontSize="$7" fontWeight="bold" color="$gray11">
+            <Separator borderColor="$gray6" />
+            <Text fontSize="$7" fontWeight="bold">
               Formation
             </Text>
-            <XStack gap="$2" ai="center">
-              {formation.map((f, idx) => (
-                <React.Fragment key={idx}>
-                  <View
-                    borderWidth={1}
-                    borderColor="$blue8"
-                    borderRadius={9999}
-                    overflow="hidden"
-                    bg="$accentBackground"
-                    py="$2"
-                    px="$4"
-                  >
-                    <Text fontSize="$5" color="$gray11">
-                      {f}
-                    </Text>
-                  </View>
-                  {idx !== formation.length - 1 && (
-                    <Text fontSize="$5" color="$gray11">
-                      +
-                    </Text>
-                  )}
-                </React.Fragment>
-              ))}
-            </XStack>
+            <ScrollView horizontal>
+              <XStack gap="$2" ai="center">
+                {formation.map((f, idx) => (
+                  <React.Fragment key={idx}>
+                    <View
+                      borderWidth={1}
+                      borderColor="$blue8"
+                      borderRadius={9999}
+                      overflow="hidden"
+                      bg="$accentBackground"
+                      py="$2"
+                      px="$4"
+                    >
+                      <Text fontSize="$5" color="$gray11">
+                        {f}
+                      </Text>
+                    </View>
+                    {idx !== formation.length - 1 && (
+                      <Text fontSize="$5" color="$gray11">
+                        +
+                      </Text>
+                    )}
+                  </React.Fragment>
+                ))}
+              </XStack>
+            </ScrollView>
           </Stack>
         )}
-        <Separator borderColor="$gray6" />
         {see_also && see_also.length > 0 && (
           <>
             <Stack gap="$2">
-              <Text fontSize="$7" fontWeight="bold" color="$gray11">
+              <Separator borderColor="$gray6" />
+              <Text fontSize="$7" fontWeight="bold" color="$white">
                 See also
               </Text>
               {see_also.map(
                 (s, idx) =>
                   see_also_items?.[idx] && (
-                    <Link push href={`/grammar/${see_also_items[idx]!.id}`}>
+                    <Link
+                      push
+                      href={`/grammar/${see_also_items[idx]!.id}`}
+                      key={idx}
+                    >
                       <Text
                         fontSize="$5"
                         color="$blue10"
@@ -117,16 +123,16 @@ export default function ({
                         {see_also_items![idx]!.main_grammar} {">"}
                       </Text>
                     </Link>
-                  ),
+                  )
               )}
             </Stack>
-            <Separator borderColor="$gray6" />
           </>
         )}
         {phrases.length > 0 && (
           <>
             <Stack gap="$4">
-              <Text fontSize="$7" fontWeight="bold" color="$gray11">
+              <Separator borderColor="$gray6" />
+              <Text fontSize="$7" fontWeight="bold">
                 Phrases
               </Text>
               {phrases.map((p, idx) => (
@@ -147,14 +153,14 @@ export default function ({
                     ))}
                   </Text>
                   {p.english && (
-                    <Text fontSize="$5" color="$gray8">
+                    <Text fontSize="$5" color="$gray9">
                       {p.english.split("***").map((s, i) => (
                         <Text
                           key={i}
                           fontSize="$5"
                           fontWeight={i % 2 === 0 ? "500" : "700"}
                           textDecorationStyle="dotted"
-                          color={i % 2 === 0 ? "$gray8" : "$gray10"}
+                          color={i % 2 === 0 ? "$gray9" : "$gray10"}
                         >
                           {s}
                         </Text>

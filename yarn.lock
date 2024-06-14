@@ -1208,6 +1208,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@charlescoeder/react-native-kuromoji@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@charlescoeder/react-native-kuromoji@npm:0.2.1"
+  dependencies:
+    async: "npm:^2.0.1"
+    doublearray: "npm:0.0.2"
+    expo-file-system: "npm:^15.6.0"
+    pako: "npm:^2.1.0"
+    zlibjs: "npm:^0.3.1"
+  checksum: 10c0/b4aa57e61ef4df894ef6a6cf256f785995d8015bff359b886dbbeec1c64f4726b577f8a2de4f4b57473623cd1ed7e3e045b06198cd1f362c5a70c0976cf1bd2d
+  languageName: node
+  linkType: hard
+
 "@colorfy-software/zfy@npm:^1.0.0":
   version: 1.0.0
   resolution: "@colorfy-software/zfy@npm:1.0.0"
@@ -5567,6 +5580,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"async@npm:^2.0.1":
+  version: 2.6.4
+  resolution: "async@npm:2.6.4"
+  dependencies:
+    lodash: "npm:^4.17.14"
+  checksum: 10c0/0ebb3273ef96513389520adc88e0d3c45e523d03653cc9b66f5c46f4239444294899bfd13d2b569e7dbfde7da2235c35cf5fd3ece9524f935d41bbe4efccdad0
+  languageName: node
+  linkType: hard
+
 "asynckit@npm:^0.4.0":
   version: 0.4.0
   resolution: "asynckit@npm:0.4.0"
@@ -7150,6 +7172,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"doublearray@npm:0.0.2":
+  version: 0.0.2
+  resolution: "doublearray@npm:0.0.2"
+  checksum: 10c0/ac830e612e17d0a45084e0ab5cc6255e79859a9135acde4b1bb3cee827ab0a29213f42916a72a240975ed905a4f9cade7844456f3b0d6ce3731fbf681561433e
+  languageName: node
+  linkType: hard
+
 "dreamopt@npm:~0.8.0":
   version: 0.8.0
   resolution: "dreamopt@npm:0.8.0"
@@ -7940,6 +7969,17 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 10c0/2746d85b2bd92cd5fadfd56b5369f57847416363f0da2007f1c7e978dbff807925275977fda071eb2e7602f01f63952ea25be7b04d684697e0de5c892e056414
+  languageName: node
+  linkType: hard
+
+"expo-file-system@npm:^15.6.0":
+  version: 15.9.0
+  resolution: "expo-file-system@npm:15.9.0"
+  dependencies:
+    uuid: "npm:^3.4.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/f154189558da71ae0569af131efb9433eea8cc97670bf8bfe303bb8c08507b98a7db0c00bf0b598b29deb81e9487eddbb74096d5e9d86fee8228c76715584e4c
   languageName: node
   linkType: hard
 
@@ -10217,6 +10257,7 @@ __metadata:
     "@babel/plugin-transform-arrow-functions": "npm:^7.24.1"
     "@babel/plugin-transform-shorthand-properties": "npm:^7.24.1"
     "@babel/plugin-transform-template-literals": "npm:^7.24.1"
+    "@charlescoeder/react-native-kuromoji": "npm:^0.2.1"
     "@colorfy-software/zfy": "npm:^1.0.0"
     "@expo/vector-icons": "npm:^14.0.0"
     "@react-native-async-storage/async-storage": "npm:1.23.1"
@@ -10237,6 +10278,7 @@ __metadata:
     expo: "npm:^51.0.8"
     expo-build-properties: "npm:~0.12.1"
     expo-constants: "npm:~16.0.1"
+    expo-file-system: "npm:~17.0.1"
     expo-font: "npm:~12.0.5"
     expo-linear-gradient: "npm:~13.0.2"
     expo-linking: "npm:~6.3.1"
@@ -10679,7 +10721,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.16.6, lodash@npm:^4.17.13, lodash@npm:^4.17.19, lodash@npm:^4.17.21":
+"lodash@npm:^4.16.6, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.19, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
@@ -11910,6 +11952,13 @@ __metadata:
   version: 2.2.0
   resolution: "p-try@npm:2.2.0"
   checksum: 10c0/c36c19907734c904b16994e6535b02c36c2224d433e01a2f1ab777237f4d86e6289fd5fd464850491e940379d4606ed850c03e0f9ab600b0ebddb511312e177f
+  languageName: node
+  linkType: hard
+
+"pako@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "pako@npm:2.1.0"
+  checksum: 10c0/8e8646581410654b50eb22a5dfd71159cae98145bd5086c9a7a816ec0370b5f72b4648d08674624b3870a521e6a3daffd6c2f7bc00fdefc7063c9d8232ff5116
   languageName: node
   linkType: hard
 
@@ -14820,6 +14869,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"uuid@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "uuid@npm:3.4.0"
+  bin:
+    uuid: ./bin/uuid
+  checksum: 10c0/1c13950df865c4f506ebfe0a24023571fa80edf2e62364297a537c80af09c618299797bbf2dbac6b1f8ae5ad182ba474b89db61e0e85839683991f7e08795347
+  languageName: node
+  linkType: hard
+
 "uuid@npm:^7.0.3":
   version: 7.0.3
   resolution: "uuid@npm:7.0.3"
@@ -15358,6 +15416,13 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
+  languageName: node
+  linkType: hard
+
+"zlibjs@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "zlibjs@npm:0.3.1"
+  checksum: 10c0/2d110bfcb0f8b8dbf225423f6556da9c5bca95c8b849c1218983676158a24b5cd0350357e0c4d504e27f8c7e18d471d9712576f35114a81a51bcf83453f02beb
   languageName: node
   linkType: hard
 

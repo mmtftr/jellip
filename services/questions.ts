@@ -9,6 +9,8 @@ export type Question = typeof questions.$inferSelect;
 export type QuestionWithAnswers = typeof questions.$inferSelect & {
   userAnswers: (typeof answers.$inferSelect)[];
 };
+export type QuestionAnswer = Awaited<ReturnType<typeof getAnswersToday>>[0];
+
 const getRandomQuestion = async ({
   categoryFilter,
   levelFilter,
@@ -83,13 +85,13 @@ const lookupAnswer = async (answer: string) => {
  *
  * @param filters { categoryFilter?: QuestionWithAnswers["category"][]; levelFilter?: QuestionWithAnswers["level"][]; } - optional
  */
-const getQuestionSeenState = async ({
+const getQuestionSeenStats = async ({
   categoryFilter,
   levelFilter,
 }: {
   categoryFilter?: QuestionWithAnswers["category"][];
   levelFilter?: QuestionWithAnswers["level"][];
-} = {}): { seen: number; total: number } => {
+} = {}): Promise<{ seen: number; total: number }> => {
   const [{ seen }] = await db
     .select({
       seen: countDistinct(questions.id),
@@ -121,7 +123,7 @@ const getQuestionSeenState = async ({
 export {
   getAnswers,
   getAnswersToday,
-  getQuestionSeenState,
+  getQuestionSeenStats,
   getRandomQuestion,
   lookupAnswer,
   lookupQuestion,

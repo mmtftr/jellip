@@ -10,6 +10,8 @@ import { AnswerButton } from "@/components/AnswerButton";
 import { QuestionContent } from "@/components/QuestionContent";
 import { ArrowRight, BookOpen, Search } from "@tamagui/lucide-icons";
 import * as WebBrowser from "expo-web-browser";
+// import { findRelatedGrammarPoints } from "@/services/grammar";
+import { useRouter } from "expo-router";
 
 export function QuestionView({
   question,
@@ -29,6 +31,8 @@ export function QuestionView({
     containerY: 0,
     paragraphHeight: 0,
   });
+
+  const router = useRouter();
 
   return (
     <YStack
@@ -108,8 +112,10 @@ export function QuestionView({
           circular
           icon={Search}
           onPress={() => {
-            if (question)
-              lookupAnswer(question?.answers[question.correctAnswer]);
+            // if (question)
+            //   findRelatedGrammarPoints(question).then((grammars) => {
+            //     router.push("/grammar/list?grammars=" + grammars.join(","));
+            //   });
           }}
         />
       </XStack>

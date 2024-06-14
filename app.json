@@ -12,26 +12,35 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "dev.mmtf.jlpt-practice",
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["shirabelookup"]
+        "LSApplicationQueriesSchemes": [
+          "shirabelookup"
+        ]
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.jlptpractice"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-build-properties", "expo-font"],
+    "plugins": [
+      "expo-router",
+      "expo-build-properties",
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
     }

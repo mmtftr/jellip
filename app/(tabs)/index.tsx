@@ -3,10 +3,6 @@ import { useEffect } from "react";
 import { Heading, Paragraph, YStack } from "tamagui";
 
 export default function Home() {
-  const r = useRouter();
-  useEffect(() => {
-    setImmediate(() => r.push("/grammar/725"));
-  }, []);
   return (
     <YStack gap="$4" padding="$8">
       <Heading>Welcome</Heading>

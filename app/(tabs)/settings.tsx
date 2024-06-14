@@ -1,6 +1,8 @@
 import {
   getAnswersToday,
+  getQuestionSeenStats,
   Question,
+  QuestionAnswer,
   QuestionWithAnswers,
 } from "@/services/questions";
 import React, { useEffect, useMemo } from "react";
@@ -15,14 +17,15 @@ import {
   useMedia,
   Paragraph,
   Button,
+  ScrollView,
 } from "tamagui";
 import { answersTodayStore, settingsStore } from "@/services/store";
 import { MultipleSelectBox, SelectBox } from "../../components/SelectBox";
-import { PieChart } from "@/components/PieChart";
 import { useRouter } from "expo-router";
 import { Alert } from "react-native";
 import { resetAndReseed } from "../../components/SeedProvider";
 import { Delete } from "@tamagui/lucide-icons";
+import { Statistics } from "@/components/Statistics";
 
 const levelItems: { name: Question["level"] }[] = [
   { name: "N1" },
@@ -88,11 +91,8 @@ const CategoryFilter = () => {
 };
 
 const SettingsTab: React.FC = () => {
-  const theme = useTheme();
-  const numberOfQuestionsSolvedToday = answersTodayStore((s) => s.data.val);
-  const [answers, setAnswers] = React.useState<
-    Awaited<ReturnType<typeof getAnswersToday>>
-  >([]);
+  const numberOfAnswersToday = answersTodayStore((s) => s.data.val);
+  const [answers, setAnswers] = React.useState<QuestionAnswer[]>([]);
   useEffect(() => {
     getAnswersToday().then((answers) => {
       answersTodayStore.getState().update((state) => {
@@ -100,84 +100,40 @@ const SettingsTab: React.FC = () => {
       });
       setAnswers(answers);
     });
-  }, [numberOfQuestionsSolvedToday]);
+  }, [numberOfAnswersToday]);
 
-  const correctCount = useMemo(
-    () =>
-      answers.filter((s) => s.questions.correctAnswer === s.answers.answer)
-        .length,
-    [answers]
-  );
-  const incorrectCount = answers.length - correctCount;
-  const router = useRouter();
+  const [seenStats, setSeenStats] =
+    React.useState<Awaited<ReturnType<typeof getQuestionSeenStats> | null>>(
+      null
+    );
+
+  const { categoryFilter, levelFilter } = settingsStore((state) => state.data);
+
+  useEffect(() => {
+    getQuestionSeenStats({
+      categoryFilter: categoryFilter.length ? categoryFilter : undefined,
+      levelFilter: levelFilter.length ? levelFilter : undefined,
+    }).then((seenStats) => {
+      setSeenStats(seenStats);
+    });
+  }, [numberOfAnswersToday, categoryFilter, levelFilter]);
 
   return (
-    <YStack padding="$8" gap="$4">
-      <Heading>Settings</Heading>
-      <YStack gap="$2">
-        <CategoryFilter />
-        <LevelFilter />
-      </YStack>
-      <Heading>Statistics</Heading>
-      <Text>
-        Number of questions solved today: {numberOfQuestionsSolvedToday}
-      </Text>
-      {numberOfQuestionsSolvedToday > 0 && (
-        <YStack gap="$4">
-          <XStack gap="$4">
-            <View w="50%" aspectRatio={1}>
-              <PieChart
-                data={[
-                  {
-                    value: correctCount,
-                    color: theme.green11.get(),
-                  },
-                  {
-                    value: incorrectCount,
-                    color: theme.red11.get(),
-                  },
-                ]}
-              />
-            </View>
-            <YStack gap="$2">
-              <Paragraph>
-                Correct: {correctCount} (
-                {((correctCount / (answers.length || 1)) * 100).toFixed(2)}%)
-              </Paragraph>
-              <Paragraph>
-                Incorrect: {incorrectCount} (
-                {((incorrectCount / (answers.length || 1)) * 100).toFixed(2)}%)
-              </Paragraph>
-            </YStack>
-          </XStack>
-          <Button onPress={() => router.push("/review")}>Review</Button>
+    <ScrollView>
+      <YStack padding="$8" gap="$4">
+        <Heading>Settings</Heading>
+        <YStack gap="$2">
+          <CategoryFilter />
+          <LevelFilter />
         </YStack>
-      )}
-      <Button
-        marginEnd="$2"
-        icon={Delete}
-        variant="outlined"
-        color="red"
-        theme="red_active"
-        size="$2"
-        onPress={() => {
-          Alert.alert("Are You Sure?", "This may delete some questions", [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-            {
-              text: "Reset",
-              onPress: () => {
-                resetAndReseed();
-              },
-            },
-          ]);
-        }}
-      >
-        Reset Questions
-      </Button>
-    </YStack>
+        <Heading>Statistics</Heading>
+        <Statistics
+          numberOfQuestionsSolvedToday={numberOfAnswersToday}
+          answers={answers}
+          seenStats={seenStats}
+        />
+      </YStack>
+    </ScrollView>
   );
 };
 
