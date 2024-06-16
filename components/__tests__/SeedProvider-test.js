@@ -29,6 +29,11 @@ describe("SeedProvider", () => {
     migrate();
   });
 
+  beforeEach(async () => {
+    jest.clearAllMocks();
+    await reset();
+  });
+
   it("should render children after seed", async () => {
     render(
       <SeedProvider>
@@ -57,6 +62,53 @@ describe("SeedProvider", () => {
     await waitFor(async () => {
       expect(
         (await db.select({ num: count() }).from(questions))[0].num
+      ).toBeGreaterThan(0);
+    });
+  });
+
+  it("should succeed even if duplicates exist", async () => {
+    await db.insert(questionSets).values({ id: 1, name: "First" }).execute();
+    await db
+      .insert(questionSets)
+      .values({ id: 2, name: "Set Without Questions" })
+      .execute();
+    await db
+      .insert(questions)
+      .values({
+        question: "What is the capital of France?",
+        answers: ["Paris", "London", "Berlin", "Madrid"],
+        correctAnswer: 0,
+        level: "easy",
+        category: "geography",
+        questionSet: 1,
+      })
+      .execute();
+    await db
+      .insert(questions)
+      .values({
+        question: "What is the capital of France?",
+        answers: ["Paris", "London", "Berlin", "Madrid"],
+        correctAnswer: 0,
+        level: "easy",
+        category: "geography",
+        questionSet: 1,
+      })
+      .execute();
+
+    render(<SeedProvider />);
+
+    await act(async () => {
+      await jest.runAllTimers();
+    });
+
+    await waitFor(async () => {
+      expect(
+        (
+          await db
+            .select({ num: count() })
+            .from(questions)
+            .where(eq(questions.questionSet, 2))
+        )[0].num
       ).toBeGreaterThan(0);
     });
   });
@@ -98,11 +150,6 @@ describe("SeedProvider", () => {
         (await db.select({ num: count() }).from(questions))[0].num
       ).toBeGreaterThan(1);
     });
-  });
-
-  beforeEach(async () => {
-    jest.clearAllMocks();
-    await reset();
   });
 });
 

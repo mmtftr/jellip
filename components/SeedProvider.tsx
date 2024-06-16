@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native";
 import { getRandomQuestion } from "../services/questions";
-import { useToastController } from "@tamagui/toast";
+import { Toast, useToastController } from "@tamagui/toast";
 
 const seedNecessarySets = async () => {
   try {
@@ -31,6 +31,7 @@ const seedNecessarySets = async () => {
           (set) => !availableQuestionSetIds.has(set.id)
         )
       )
+      .onConflictDoNothing()
       .execute();
 
     const allValues = seedVals.questions.filter(
@@ -42,6 +43,7 @@ const seedNecessarySets = async () => {
       await db
         .insert(questions)
         .values(allValues.slice(i * 1000, (i + 1) * 1000) as unknown as any)
+        .onConflictDoNothing()
         .execute();
     }
   } catch (e) {
@@ -58,9 +60,7 @@ export const resetAndReseed = async () => {
 
     // try to restore answers
     await db.insert(answers).values(answerObjects).execute();
-  } catch (e) {
-    console.error(e);
-  }
+  } catch (e) {}
 };
 
 export const checkShouldSeed = async () => {
