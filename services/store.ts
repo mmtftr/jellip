@@ -6,9 +6,23 @@ export const settingsStore = createStore(
   "settings",
   {
     categoryFilter: [] as QuestionWithAnswers["category"][],
-    levelFilter: [] as QuestionWithAnswers["level"][],
+    questionLevelFilter: [] as QuestionWithAnswers["level"][],
+    grammarLevelFilter: [] as QuestionWithAnswers["level"][],
   },
-  { persist: { getStorage: () => AsyncStorage } }
+  {
+    persist: {
+      getStorage: () => AsyncStorage,
+      version: 1,
+      migrate(persistedState, _version) {
+        if (!_version) {
+          persistedState.data.questionLevelFilter = [];
+          persistedState.data.grammarLevelFilter = [];
+        }
+
+        return persistedState;
+      },
+    },
+  }
 );
 
 export const answersTodayStore = createStore(

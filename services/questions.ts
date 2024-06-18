@@ -1,8 +1,8 @@
-import { db } from "@/services/db";
 import { answers, questions } from "@/db/schema";
+import { db } from "@/services/db";
 import { and, countDistinct, eq, exists, inArray, sql } from "drizzle-orm";
-import { openBrowserAsync } from "expo-web-browser";
 import { canOpenURL, openURL } from "expo-linking";
+import { openBrowserAsync } from "expo-web-browser";
 import { answersTodayStore } from "./store";
 
 export type Question = typeof questions.$inferSelect;
@@ -11,7 +11,19 @@ export type QuestionWithAnswers = typeof questions.$inferSelect & {
 };
 export type QuestionAnswer = Awaited<ReturnType<typeof getAnswersToday>>[0];
 
-const getRandomQuestion = async ({
+const cache: Record<string, QuestionWithAnswers | null> = {};
+
+const generateKey = ({
+  categoryFilter,
+  levelFilter,
+}: {
+  categoryFilter?: QuestionWithAnswers["category"][];
+  levelFilter?: QuestionWithAnswers["level"][];
+}) => {
+  return JSON.stringify({ categoryFilter, levelFilter });
+};
+
+const doGetRandomQuestion = async ({
   categoryFilter,
   levelFilter,
 }: {
@@ -40,6 +52,30 @@ const getRandomQuestion = async ({
   return { ...question, userAnswers: answers };
 };
 
+const getRandomQuestion = async ({
+  categoryFilter,
+  levelFilter,
+}: {
+  categoryFilter?: QuestionWithAnswers["category"][];
+  levelFilter?: QuestionWithAnswers["level"][];
+} = {}) => {
+  setTimeout(() => {
+    requestIdleCallback(async () => {
+      cache[generateKey({ categoryFilter, levelFilter })] =
+        await doGetRandomQuestion({ categoryFilter, levelFilter });
+    });
+  }, 1000);
+
+  const cachedItem = cache[generateKey({ categoryFilter, levelFilter })];
+
+  if (cachedItem) {
+    delete cache[generateKey({ categoryFilter, levelFilter })];
+    return cachedItem;
+  }
+
+  return doGetRandomQuestion({ categoryFilter, levelFilter });
+};
+
 const getAnswersToday = async () => {
   return db
     .select()
@@ -62,7 +98,7 @@ const lookupQuestion = async (question: Question) => {
   const lookupStr =
     (question?.question || "") + (question?.answers.join(" ") || "");
 
-  if (__DEV__ || (await canOpenURL("shirabelookup://search")))
+  if (await canOpenURL("shirabelookup://search"))
     return await openURL(
       `shirabelookup://search?w=${encodeURIComponent(lookupStr)}`
     );

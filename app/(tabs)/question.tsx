@@ -1,14 +1,14 @@
-import { AnimatePresence, Heading, Paragraph, View, YStack } from "tamagui";
-import { useCallback, useEffect, useState } from "react";
+import { QuestionView } from "@/components/QuestionView";
 import {
   getRandomQuestion,
   QuestionWithAnswers,
   submitAnswer,
 } from "@/services/questions";
-import { useToastController } from "@tamagui/toast";
-import * as zod from "zod";
-import { QuestionView } from "@/components/QuestionView";
 import { settingsStore } from "@/services/store";
+import { useToastController } from "@tamagui/toast";
+import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, Heading, Paragraph, View, YStack } from "tamagui";
+import * as zod from "zod";
 import { usePermuteAnswers } from "../../components/usePermuteAnswers";
 
 const questionSchema = zod.object({
@@ -24,21 +24,22 @@ function QuestionManager() {
   const [solvedId, setSolvedId] = useState(0);
   const [answer, setAnswer] = useState<null | number>(null);
   const [questionBase, setQuestion] = useState<QuestionWithAnswers | null>(
-    null,
+    null
   );
   const [loading, setLoading] = useState(false);
   const toast = useToastController();
 
   const [categoryFilter, levelFilter] = settingsStore((state) => [
     state.data.categoryFilter,
-    state.data.levelFilter,
+    state.data.questionLevelFilter,
   ]);
 
   const fetchQuestion = useCallback(
     async function () {
       setLoading(true);
       try {
-        const { categoryFilter, levelFilter } = settingsStore.getState().data;
+        const { categoryFilter, questionLevelFilter: levelFilter } =
+          settingsStore.getState().data;
         const question = await getRandomQuestion({
           categoryFilter: categoryFilter.length ? categoryFilter : undefined,
           levelFilter: levelFilter.length ? levelFilter : undefined,
@@ -67,7 +68,7 @@ function QuestionManager() {
         setLoading(false);
       }
     },
-    [setQuestion],
+    [setQuestion]
   );
 
   useEffect(() => {
@@ -104,7 +105,7 @@ function QuestionManager() {
           bottom={0}
           animation="fast"
           paddingHorizontal="$8"
-          key={solvedId} // animate out even if it's the same question
+          key={solvedId}
           exitStyle={{ transform: [{ translateX: 200 }], opacity: 0 }}
           enterStyle={{ transform: [{ translateX: -200 }], opacity: 0 }}
           transform={[{ translateX: 0 }]}

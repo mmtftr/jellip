@@ -3,26 +3,23 @@ import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
-  useRoute,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
-import { useColorScheme } from "react-native";
-import MigrationProvider from "../components/MigrationProvider";
-import { TamaguiProvider, Theme, YStack } from "tamagui";
+import { tamaguiConfig } from "@/constants/tamagui";
 import {
   Toast,
   ToastProvider,
   ToastViewport,
   useToastState,
 } from "@tamagui/toast";
-import { tamaguiConfig } from "@/constants/tamagui";
-import { useRehydrate } from "@colorfy-software/zfy";
-import { stores } from "@/services/store";
+import { useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { TamaguiProvider, YStack } from "tamagui";
+import MigrationProvider from "../components/MigrationProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -115,7 +112,11 @@ function RootLayoutNav() {
                 name="grammar/[id]"
                 options={{ title: "Grammar" }}
               />
-              <Stack.Screen name="review" options={{ presentation: "modal" }} />
+              <Stack.Screen
+                name="grammar/list"
+                options={{ title: "Grammar List" }}
+              />
+              <Stack.Screen name="review" options={{ title: "Review" }} />
             </Stack>
           </MigrationProvider>
         </ToastProvider>

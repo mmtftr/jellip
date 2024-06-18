@@ -1,16 +1,15 @@
-import { YStack, XStack, View, ScrollView, Button } from "tamagui";
-import { useState } from "react";
+import { AnswerButton } from "@/components/AnswerButton";
+import { QuestionContent } from "@/components/QuestionContent";
 import {
   Question,
   QuestionWithAnswers,
-  lookupAnswer,
   lookupQuestion,
 } from "@/services/questions";
-import { AnswerButton } from "@/components/AnswerButton";
-import { QuestionContent } from "@/components/QuestionContent";
 import { ArrowRight, BookOpen, Search } from "@tamagui/lucide-icons";
-import * as WebBrowser from "expo-web-browser";
+import { useState } from "react";
+import { Button, ScrollView, View, XStack, YStack } from "tamagui";
 // import { findRelatedGrammarPoints } from "@/services/grammar";
+import { findRelatedGrammarPoints } from "@/services/grammar";
 import { useRouter } from "expo-router";
 
 export function QuestionView({
@@ -31,6 +30,7 @@ export function QuestionView({
     containerY: 0,
     paragraphHeight: 0,
   });
+  const wide = question?.answers.some((a) => a.length > 10);
 
   const router = useRouter();
 
@@ -75,6 +75,7 @@ export function QuestionView({
         {question?.answers.map((answerText, idx) => (
           <AnswerButton
             key={idx}
+            wide={wide}
             answerText={answerText}
             isCorrect={idx === question!.correctAnswer}
             selected={answer === null ? answer : idx === answer}
@@ -112,10 +113,10 @@ export function QuestionView({
           circular
           icon={Search}
           onPress={() => {
-            // if (question)
-            //   findRelatedGrammarPoints(question).then((grammars) => {
-            //     router.push("/grammar/list?grammars=" + grammars.join(","));
-            //   });
+            if (question)
+              findRelatedGrammarPoints(question).then((grammars) => {
+                router.push("/grammar/list?grammars=" + grammars.join(","));
+              });
           }}
         />
       </XStack>

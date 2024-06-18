@@ -43,7 +43,8 @@ yarn-error.*
 *.tsbuildinfo
 
 
-scripts/data
+scripts/data/*
+!scripts/data/grammar_details.json
 
 # ignore ios
 ios/

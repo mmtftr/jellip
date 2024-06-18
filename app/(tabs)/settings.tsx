@@ -1,3 +1,4 @@
+import { Statistics } from "@/components/Statistics";
 import {
   getAnswersToday,
   getQuestionSeenStats,
@@ -5,27 +6,10 @@ import {
   QuestionAnswer,
   QuestionWithAnswers,
 } from "@/services/questions";
-import React, { useEffect, useMemo } from "react";
-import {
-  YStack,
-  Heading,
-  Text,
-  XStack,
-  Label,
-  useTheme,
-  View,
-  useMedia,
-  Paragraph,
-  Button,
-  ScrollView,
-} from "tamagui";
 import { answersTodayStore, settingsStore } from "@/services/store";
-import { MultipleSelectBox, SelectBox } from "../../components/SelectBox";
-import { useRouter } from "expo-router";
-import { Alert } from "react-native";
-import { resetAndReseed } from "../../components/SeedProvider";
-import { Delete } from "@tamagui/lucide-icons";
-import { Statistics } from "@/components/Statistics";
+import React, { useEffect } from "react";
+import { H5, Heading, Label, ScrollView, XStack, YStack } from "tamagui";
+import { MultipleSelectBox } from "../../components/SelectBox";
 
 const levelItems: { name: Question["level"] }[] = [
   { name: "N1" },
@@ -34,13 +18,19 @@ const levelItems: { name: Question["level"] }[] = [
   { name: "N4" },
   { name: "N5" },
 ];
-const LevelFilter = () => {
-  const filters = settingsStore((state) => state.data.levelFilter);
-  const [val, setVal] = React.useState<QuestionWithAnswers["level"][]>(filters);
+const LevelFilter = ({
+  settingKey: settingsKey,
+}: {
+  settingKey: "questionLevelFilter" | "grammarLevelFilter";
+}) => {
+  const filters = settingsStore((state) => state.data[settingsKey]);
+  const [val, setVal] = React.useState<QuestionWithAnswers["level"][]>(
+    filters || []
+  );
   const name = "Level Filter";
   useEffect(() => {
     settingsStore.getState().update((state) => {
-      state.levelFilter = val;
+      state[settingsKey] = val;
     });
   }, [val]);
 
@@ -107,7 +97,9 @@ const SettingsTab: React.FC = () => {
       null
     );
 
-  const { categoryFilter, levelFilter } = settingsStore((state) => state.data);
+  const { categoryFilter, questionLevelFilter: levelFilter } = settingsStore(
+    (state) => state.data
+  );
 
   useEffect(() => {
     getQuestionSeenStats({
@@ -123,8 +115,13 @@ const SettingsTab: React.FC = () => {
       <YStack padding="$8" gap="$4">
         <Heading>Settings</Heading>
         <YStack gap="$2">
+          <H5>Question Filters</H5>
           <CategoryFilter />
-          <LevelFilter />
+          <LevelFilter settingKey="questionLevelFilter" />
+        </YStack>
+        <YStack gap="$2">
+          <H5>Grammar Filters</H5>
+          <LevelFilter settingKey="grammarLevelFilter" />
         </YStack>
         <Heading>Statistics</Heading>
         <Statistics

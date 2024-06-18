@@ -1,17 +1,9 @@
 import { db } from "@/services/db"; // drizzle
-import {
-  answers,
-  categories,
-  levels,
-  questionSets,
-  questions,
-} from "../db/schema";
+import { answers, questionSets, questions } from "../db/schema";
 import seedVals from "@/constants/seed.json";
 import { useEffect, useState } from "react";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native";
-import { getRandomQuestion } from "../services/questions";
-import { Toast, useToastController } from "@tamagui/toast";
+import { useToastController } from "@tamagui/toast";
 
 const seedNecessarySets = async () => {
   try {
@@ -83,22 +75,38 @@ export const checkShouldSeed = async () => {
 
 export default function SeedProvider({ children }: React.PropsWithChildren) {
   const [shouldSeed, setShouldSeed] = useState<boolean | null>(null);
-  const seeded = useAsyncStorage("seeded");
+  const toast = useToastController();
 
   useEffect(() => {
-    checkShouldSeed().then((isSeedingRequired) => {
-      setShouldSeed(isSeedingRequired);
-    });
+    checkShouldSeed()
+      .then((isSeedingRequired) => {
+        setShouldSeed(isSeedingRequired);
+      })
+      .catch((err) => {
+        toast.show("Database Error", {
+          type: "error",
+          message: "Failed to detect if database is complete: " + String(err),
+        });
+      });
   }, []);
 
   useEffect(() => {
     if (shouldSeed === true) {
-      seedNecessarySets().then(() => {
-        seeded.setItem("true");
-        setShouldSeed(false);
-      });
+      seedNecessarySets()
+        .then(() => {
+          setShouldSeed(false);
+        })
+        .catch((err) => {
+          setShouldSeed(false);
+          toast.show("Database Error", {
+            type: "error",
+            message:
+              "Failed to add missing questions to the database: " + String(err),
+          });
+        });
     }
   }, [shouldSeed]);
+
   if (shouldSeed !== false) {
     return <ActivityIndicator />;
   }
