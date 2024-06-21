@@ -5,6 +5,7 @@ import {
   submitAnswer,
 } from "@/services/questions";
 import { settingsStore } from "@/services/store";
+import { useIsFocused } from "@react-navigation/native";
 import { useToastController } from "@tamagui/toast";
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, Heading, Paragraph, View, YStack } from "tamagui";
@@ -21,6 +22,7 @@ const questionSchema = zod.object({
 });
 
 function QuestionManager() {
+  const focus = useIsFocused();
   const [solvedId, setSolvedId] = useState(0);
   const [answer, setAnswer] = useState<null | number>(null);
   const [questionBase, setQuestion] = useState<QuestionWithAnswers | null>(
@@ -71,10 +73,16 @@ function QuestionManager() {
     [setQuestion]
   );
 
+  const [scheduledUpdate, setScheduledUpdate] = useState(false);
   useEffect(() => {
-    setAnswer(null);
-    fetchQuestion();
+    setScheduledUpdate(true);
   }, [categoryFilter, levelFilter]);
+  useEffect(() => {
+    if (focus && scheduledUpdate) {
+      setAnswer(null);
+      fetchQuestion();
+    }
+  }, [focus, scheduledUpdate]);
 
   const handleAnswerBase = async (answerId: number) => {
     if (answer !== null) {
@@ -117,7 +125,7 @@ function QuestionManager() {
           />
         </View>
       )}
-      {!questionBase && !loading && (
+      {!questionBase && !loading && !scheduledUpdate && (
         <YStack
           f={1}
           enterStyle={{ opacity: 0 }}

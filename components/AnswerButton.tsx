@@ -1,4 +1,6 @@
+import { settingsStore } from "@/services/store";
 import { Button, ThemeName } from "tamagui";
+import { JapaneseText } from "./JapaneseText";
 
 export const AnswerButton = ({
   answerText,
@@ -22,6 +24,8 @@ export const AnswerButton = ({
       theme = "blue";
     }
   }
+
+  const furiEnabled = settingsStore((s) => s.data.furiEnabled);
   return (
     <Button
       animation="superfastTransform"
@@ -31,10 +35,17 @@ export const AnswerButton = ({
       theme={theme}
       size={"$5"}
       noTextWrap={false}
-      textProps={{ adjustsFontSizeToFit: true }}
       onPress={onPress}
     >
-      {answerText}
+      {furiEnabled ? (
+        <JapaneseText
+          textProps={{ adjustsFontSizeToFit: true }}
+          size="$5"
+          text={answerText}
+        />
+      ) : (
+        answerText
+      )}
     </Button>
   );
 };

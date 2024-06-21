@@ -10,12 +10,15 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
 import { tamaguiConfig } from "@/constants/tamagui";
+import { JotobaFuriganaService } from "@/services/ext/jotoba";
+import { FuriganaContext } from "@/services/furigana";
 import {
   Toast,
   ToastProvider,
   ToastViewport,
   useToastState,
 } from "@tamagui/toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TamaguiProvider, YStack } from "tamagui";
@@ -25,6 +28,8 @@ export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
+
+const qc = new QueryClient();
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -94,33 +99,39 @@ function RootLayoutNav() {
   const { top } = useSafeAreaInsets();
 
   return (
-    <TamaguiProvider
-      config={tamaguiConfig}
-      defaultTheme={colorScheme || "light"}
-    >
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <ToastProvider burntOptions={{ from: "top" }}>
-          <ToastViewport position="absolute" left={0} right={0} top={top} />
-          <CurrentToast />
-          <MigrationProvider>
-            <Stack>
-              <Stack.Screen
-                name="(tabs)"
-                options={{ headerShown: false, title: "Home" }}
-              />
-              <Stack.Screen
-                name="grammar/[id]"
-                options={{ title: "Grammar" }}
-              />
-              <Stack.Screen
-                name="grammar/list"
-                options={{ title: "Grammar List" }}
-              />
-              <Stack.Screen name="review" options={{ title: "Review" }} />
-            </Stack>
-          </MigrationProvider>
-        </ToastProvider>
-      </ThemeProvider>
-    </TamaguiProvider>
+    <FuriganaContext.Provider value={{ service: new JotobaFuriganaService() }}>
+      <QueryClientProvider client={qc}>
+        <TamaguiProvider
+          config={tamaguiConfig}
+          defaultTheme={colorScheme || "light"}
+        >
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <ToastProvider burntOptions={{ from: "top" }}>
+              <ToastViewport position="absolute" left={0} right={0} top={top} />
+              <CurrentToast />
+              <MigrationProvider>
+                <Stack>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false, title: "Home" }}
+                  />
+                  <Stack.Screen
+                    name="grammar/[id]"
+                    options={{ title: "Grammar" }}
+                  />
+                  <Stack.Screen
+                    name="grammar/list"
+                    options={{ title: "Grammar List" }}
+                  />
+                  <Stack.Screen name="review" options={{ title: "Review" }} />
+                </Stack>
+              </MigrationProvider>
+            </ToastProvider>
+          </ThemeProvider>
+        </TamaguiProvider>
+      </QueryClientProvider>
+    </FuriganaContext.Provider>
   );
 }

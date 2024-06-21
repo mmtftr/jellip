@@ -8,7 +8,16 @@ import {
 } from "@/services/questions";
 import { answersTodayStore, settingsStore } from "@/services/store";
 import React, { useEffect } from "react";
-import { H5, Heading, Label, ScrollView, XStack, YStack } from "tamagui";
+import {
+  H5,
+  Heading,
+  Label,
+  ScrollView,
+  Separator,
+  Switch,
+  XStack,
+  YStack,
+} from "tamagui";
 import { MultipleSelectBox } from "../../components/SelectBox";
 
 const levelItems: { name: Question["level"] }[] = [
@@ -83,6 +92,7 @@ const CategoryFilter = () => {
 const SettingsTab: React.FC = () => {
   const numberOfAnswersToday = answersTodayStore((s) => s.data.val);
   const [answers, setAnswers] = React.useState<QuestionAnswer[]>([]);
+
   useEffect(() => {
     getAnswersToday().then((answers) => {
       answersTodayStore.getState().update((state) => {
@@ -97,9 +107,11 @@ const SettingsTab: React.FC = () => {
       null
     );
 
-  const { categoryFilter, questionLevelFilter: levelFilter } = settingsStore(
-    (state) => state.data
-  );
+  const {
+    categoryFilter,
+    questionLevelFilter: levelFilter,
+    furiEnabled,
+  } = settingsStore((state) => state.data);
 
   useEffect(() => {
     getQuestionSeenStats({
@@ -114,6 +126,26 @@ const SettingsTab: React.FC = () => {
     <ScrollView>
       <YStack padding="$8" gap="$4">
         <Heading>Settings</Heading>
+        <H5>Helpers</H5>
+        <XStack width={200} alignItems="center" gap="$4">
+          <Label paddingRight="$0" justifyContent="flex-end">
+            Enable furigana
+            {"\n"}
+            <Label size="$1">*experimental</Label>
+          </Label>
+          <Separator minHeight={20} vertical />
+          <Switch
+            checked={furiEnabled}
+            onCheckedChange={(s) =>
+              settingsStore
+                .getState()
+                .update((state) => (state.furiEnabled = s))
+            }
+          >
+            <Switch.Thumb animation="fast" />
+          </Switch>
+        </XStack>
+
         <YStack gap="$2">
           <H5>Question Filters</H5>
           <CategoryFilter />

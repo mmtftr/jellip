@@ -8,16 +8,16 @@ export const settingsStore = createStore(
     categoryFilter: [] as QuestionWithAnswers["category"][],
     questionLevelFilter: [] as QuestionWithAnswers["level"][],
     grammarLevelFilter: [] as QuestionWithAnswers["level"][],
+    furiEnabled: false,
   },
   {
     persist: {
       getStorage: () => AsyncStorage,
       version: 1,
       migrate(persistedState, _version) {
-        if (!_version) {
-          persistedState.data.questionLevelFilter = [];
-          persistedState.data.grammarLevelFilter = [];
-        }
+        persistedState.data.questionLevelFilter ||= [];
+        persistedState.data.grammarLevelFilter ||= [];
+        persistedState.data.furiEnabled ||= false;
 
         return persistedState;
       },

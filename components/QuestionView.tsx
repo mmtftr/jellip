@@ -68,7 +68,7 @@ export function QuestionView({
           height={layout.questionY - layout.containerY}
           scrollEnabled={layout.paragraphHeight > layout.questionY}
         >
-          <QuestionContent question={question} />
+          <QuestionContent question={question} answer={answer} />
         </ScrollView>
       </View>
       <XStack gap="$2" flexWrap="wrap">
@@ -105,7 +105,7 @@ export function QuestionView({
             circular
             icon={ArrowRight}
             onPress={() => {
-              if (question && answer) handleAnswer(-1); // goes to the next question
+              if (question && answer !== null) handleAnswer(-1); // goes to the next question
             }}
           />
         )}

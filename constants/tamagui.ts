@@ -1,5 +1,5 @@
-import { config } from "@tamagui/config/v3";
 import { createAnimations } from "@tamagui/animations-moti";
+import { config } from "@tamagui/config/v3";
 
 import { createTamagui } from "tamagui";
 
